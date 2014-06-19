@@ -12,7 +12,7 @@ $ npm install --save decompress-tar
 
 ```js
 var Decompress = require('decompress');
-var zip = require('decompress-tar');
+var tar = require('decompress-tar');
 
 var decompress = new Decompress()
     .src('foo.tar')
