@@ -1,6 +1,6 @@
 {
   "name": "decompress-tar",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "decompress tar plugin",
   "license": "MIT",
   "repository": "kevva/decompress-tar",
