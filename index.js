@@ -20,12 +20,14 @@ module.exports = function (opts) {
         var files = [];
 
         if (archiveType(file.contents) !== 'tar') {
-            return cb();
+            cb();
+            return;
         }
 
         sbuff(file.contents).pipe(tar.Parse())
             .on('error', function (err) {
-                return cb(err);
+                cb(err);
+                return;
             })
             .on('entry', function (file) {
                 if (file.type !== 'Directory') {
