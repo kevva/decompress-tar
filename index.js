@@ -3,7 +3,6 @@
 var isTar = require('is-tar');
 var sbuff = require('simple-bufferstream');
 var stripDirs = require('strip-dirs');
-var path = require('path');
 var tar = require('tar');
 
 /**
@@ -30,6 +29,7 @@ module.exports = function (opts) {
                 cb(err);
                 return;
             })
+
             .on('entry', function (file) {
                 if (file.type !== 'Directory') {
                     var chunk = '';
@@ -44,6 +44,7 @@ module.exports = function (opts) {
                     });
                 }
             })
+
             .on('end', function () {
                 decompress.files = files;
                 cb();

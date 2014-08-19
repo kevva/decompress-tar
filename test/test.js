@@ -1,4 +1,4 @@
-/*global describe, it */
+/*global afterEach, describe, it */
 'use strict';
 
 var assert = require('assert');
@@ -9,10 +9,10 @@ var rimraf = require('rimraf');
 var tar = require('../');
 
 describe('tar()', function () {
-    before(function() {
-        rimraf.sync(path.join(__dirname, 'tmp'));
+    afterEach(function (cb) {
+        rimraf(path.join(__dirname, 'tmp'), cb);
     });
-    
+
     it('should decompress a TAR file', function (cb) {
         var decompress = new Decompress();
 
@@ -26,7 +26,8 @@ describe('tar()', function () {
                 cb();
             });
     });
-    it('should strip directory level with `strip` option.', function (cb) {
+
+    it('should strip path level using the `strip` option', function (cb) {
         var decompress = new Decompress();
 
         decompress
