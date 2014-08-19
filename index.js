@@ -2,6 +2,7 @@
 
 var isTar = require('is-tar');
 var sbuff = require('simple-bufferstream');
+var stripDirs = require('strip-dirs');
 var path = require('path');
 var tar = require('tar');
 
@@ -39,19 +40,7 @@ module.exports = function (opts) {
 
                     file.on('end', function () {
                         chunk = new Buffer(chunk, 'utf8');
-
-                        if (opts.strip) {
-                            var f = path.basename(file.path);
-                            var p = path.dirname(file.path.split('/'));
-
-                            if (Array.isArray(p)) {
-                                p = p.slice(opts.strip).join(path.sep);
-                            }
-
-                            file.path = path.join(p, f);
-                        }
-
-                        files.push({ contents: chunk, path: file.path });
+                        files.push({ contents: chunk, path: stripDirs(file.path, opts.strip) });
                     });
                 }
             })
