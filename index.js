@@ -1,6 +1,6 @@
 'use strict';
 
-var archiveType = require('archive-type');
+var isTar = require('is-tar');
 var sbuff = require('simple-bufferstream');
 var path = require('path');
 var tar = require('tar');
@@ -19,7 +19,7 @@ module.exports = function (opts) {
     return function (file, decompress, cb) {
         var files = [];
 
-        if (archiveType(file.contents) !== 'tar') {
+        if (!isTar(file.contents)) {
             cb();
             return;
         }
