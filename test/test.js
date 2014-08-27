@@ -1,43 +1,50 @@
-/*global afterEach, describe, it */
 'use strict';
 
-var assert = require('assert');
 var Decompress = require('decompress');
-var fs = require('fs');
+var exists = require('fs').exists;
 var path = require('path');
-var rimraf = require('rimraf');
+var rm = require('rimraf');
 var tar = require('../');
+var test = require('ava');
 
-describe('tar()', function () {
-    afterEach(function (cb) {
-        rimraf(path.join(__dirname, 'tmp'), cb);
-    });
+test('decompress a TAR file', function (t) {
+    t.plan(3);
 
-    it('should decompress a TAR file', function (cb) {
-        var decompress = new Decompress();
+    var decompress = new Decompress()
+        .src(path.join(__dirname, 'fixtures/test-mode.tar'))
+        .dest(path.join(__dirname, 'tmp'))
+        .use(tar());
 
-        decompress
-            .src(path.join(__dirname, 'fixtures/test.tar'))
-            .dest(path.join(__dirname, 'tmp'))
-            .use(tar())
-            .decompress(function (err) {
-                assert(!err);
-                assert(fs.existsSync(path.join(__dirname, 'tmp/test.jpg')));
-                cb();
+    decompress.decompress(function (err) {
+        t.assert(!err);
+
+        exists(path.join(decompress.dest(), 'test.jpg'), function (exist) {
+            t.assert(exist);
+
+            rm(decompress.dest(), function (err) {
+                t.assert(!err);
             });
+        });
     });
+});
 
-    it('should strip path level using the `strip` option', function (cb) {
-        var decompress = new Decompress();
+test('strip path level using the `strip` option', function (t) {
+    t.plan(3);
 
-        decompress
-            .src(path.join(__dirname, 'fixtures/test-nested.tar'))
-            .dest(path.join(__dirname, 'tmp'))
-            .use(tar({ strip: 1 }))
-            .decompress(function (err) {
-                assert(!err);
-                assert(fs.existsSync(path.join(__dirname, 'tmp/test/test-nested.jpg')));
-                cb();
+    var decompress = new Decompress()
+        .src(path.join(__dirname, 'fixtures/test-nested.tar'))
+        .dest(path.join(__dirname, 'tmp'))
+        .use(tar({ strip: 1 }));
+
+    decompress.decompress(function (err) {
+        t.assert(!err);
+
+        exists(path.join(decompress.dest(), 'test.jpg'), function (exist) {
+            t.assert(exist);
+
+            rm(decompress.dest(), function (err) {
+                t.assert(!err);
             });
+        });
     });
 });
