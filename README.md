@@ -1,4 +1,4 @@
-# decompress-tar [![Build Status](https://travis-ci.org/kevva/decompress-tar.svg?branch=master)](https://travis-ci.org/kevva/decompress-tar)
+# decompress-tar [![Build Status](http://img.shields.io/travis/kevva/decompress-tar.svg?style=flat)](https://travis-ci.org/kevva/decompress-tar)
 
 > tar decompress plugin
 
