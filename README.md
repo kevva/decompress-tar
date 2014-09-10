@@ -16,10 +16,29 @@ var tar = require('decompress-tar');
 
 var decompress = new Decompress()
     .src('foo.tar')
-    .dest('destFolder')
+    .dest('dest')
     .use(tar({ strip: 1 }));
 
-decompress.decompress();
+decompress.run(function (err, files) {
+    if (err) {
+        throw err;
+    }
+
+    console.log('Files extracted successfully!'); 
+});
+```
+
+You can also use this plugin with [gulp](http://gulpjs.com):
+
+```js
+var gulp = require('gulp');
+var tar = require('decompress-tar');
+
+gulp.task('default', function () {
+    return gulp.src('foo.tar')
+        .pipe(tar({ strip: 1 }))
+        .pipe(gulp.dest('dest'));
+});
 ```
 
 ## Options
