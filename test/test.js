@@ -18,8 +18,8 @@ test('decompress a TAR file', function (t) {
             contents: buf
         });
 
-        stream.on('data', function (files) {
-            t.assert(isJpg(files[0].contents));
+        stream.on('data', function (file) {
+            t.assert(isJpg(file.contents));
         });
 
         stream.end(file);
@@ -37,9 +37,9 @@ test('strip path level using the `strip` option', function (t) {
             contents: buf
         });
 
-        stream.on('data', function (files) {
-            t.assert(files[0].path === 'test.jpg');
-            t.assert(isJpg(files[0].contents));
+        stream.on('data', function (file) {
+            t.assert(file.path === 'test.jpg');
+            t.assert(isJpg(file.contents));
         });
 
         stream.end(file);
