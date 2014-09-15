@@ -2,9 +2,8 @@
 
 var File = require('vinyl');
 var isTar = require('is-tar');
-var sbuff = require('simple-bufferstream');
 var stripDirs = require('strip-dirs');
-var tar = require('tar');
+var tar = require('tar-stream');
 var through = require('through2');
 
 /**
@@ -19,6 +18,7 @@ module.exports = function (opts) {
     opts.strip = +opts.strip || 0;
 
     return through.obj(function (file, enc, cb) {
+        var extract = tar.extract();
         var self = this;
 
         if (file.isNull()) {
@@ -36,33 +36,36 @@ module.exports = function (opts) {
             return;
         }
 
-        sbuff(file.contents).pipe(tar.Parse())
-            .on('error', function (err) {
-                cb(err);
-                return;
-            })
+        extract.on('error', function (err) {
+            cb(err);
+            return;
+        });
 
-            .on('entry', function (file) {
-                if (file.type !== 'Directory') {
-                    var chunk = [];
-                    var len = 0;
+        extract.on('entry', function (header, stream, done) {
+            var chunk = [];
+            var len = 0;
 
-                    file.on('data', function (data) {
-                        chunk.push(data);
-                        len += data.length;
-                    });
-
-                    file.on('end', function () {
-                        self.push(new File({
-                            contents: Buffer.concat(chunk, len),
-                            path: stripDirs(file.path, opts.strip)
-                        }));
-                    });
-                }
-            })
-
-            .on('end', function () {
-                cb();
+            stream.on('data', function (data) {
+                chunk.push(data);
+                len += data.length;
             });
+
+            stream.on('end', function () {
+                if (header.type !== 'directory') {
+                    self.push(new File({
+                        contents: Buffer.concat(chunk, len),
+                        path: stripDirs(header.name, opts.strip)
+                    }));
+                }
+
+                done();
+            });
+        });
+
+        extract.on('finish', function () {
+            cb();
+        });
+
+        extract.end(file.contents);
     });
 };
