@@ -7,34 +7,34 @@ var tar = require('../');
 var test = require('ava');
 
 test('decompress a TAR file', function (t) {
-    t.plan(2);
+	t.plan(2);
 
-    read(path.join(__dirname, 'fixtures/test.tar'), function (err, file) {
-        t.assert(!err);
+	read(path.join(__dirname, 'fixtures/test.tar'), function (err, file) {
+		t.assert(!err);
 
-        var stream = tar();
+		var stream = tar();
 
-        stream.on('data', function (file) {
-            t.assert(isJpg(file.contents));
-        });
+		stream.on('data', function (file) {
+			t.assert(isJpg(file.contents));
+		});
 
-        stream.end(file);
-    });
+		stream.end(file);
+	});
 });
 
 test('strip path level using the `strip` option', function (t) {
-    t.plan(3);
+	t.plan(3);
 
-    read(path.join(__dirname, 'fixtures/test-nested.tar'), function (err, file) {
-        t.assert(!err);
+	read(path.join(__dirname, 'fixtures/test-nested.tar'), function (err, file) {
+		t.assert(!err);
 
-        var stream = tar({ strip: 1 });
+		var stream = tar({ strip: 1 });
 
-        stream.on('data', function (file) {
-            t.assert(file.path === 'test.jpg');
-            t.assert(isJpg(file.contents));
-        });
+		stream.on('data', function (file) {
+			t.assert(file.path === 'test.jpg');
+			t.assert(isJpg(file.contents));
+		});
 
-        stream.end(file);
-    });
+		stream.end(file);
+	});
 });
