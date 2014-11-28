@@ -10,7 +10,7 @@ test('decompress a TAR file', function (t) {
 	t.plan(2);
 
 	read(path.join(__dirname, 'fixtures/test.tar'), function (err, file) {
-		t.assert(!err);
+		t.assert(!err, err);
 
 		var stream = tar();
 
@@ -26,7 +26,7 @@ test('strip path level using the `strip` option', function (t) {
 	t.plan(3);
 
 	read(path.join(__dirname, 'fixtures/test-nested.tar'), function (err, file) {
-		t.assert(!err);
+		t.assert(!err, err);
 
 		var stream = tar({ strip: 1 });
 
