@@ -17,7 +17,7 @@ var tar = require('decompress-tar');
 var decompress = new Decompress()
 	.src('foo.tar')
 	.dest('dest')
-	.use(tar({ strip: 1 }));
+	.use(tar({strip: 1}));
 
 decompress.run(function (err, files) {
 	if (err) {
@@ -36,7 +36,7 @@ var tar = require('decompress-tar');
 
 gulp.task('default', function () {
 	return gulp.src('foo.tar')
-		.pipe(tar({ strip: 1 }))
+		.pipe(tar({strip: 1}))
 		.pipe(gulp.dest('dest'));
 });
 ```
