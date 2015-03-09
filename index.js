@@ -24,7 +24,7 @@ module.exports = function (opts) {
 			return;
 		}
 
-		if (!isTar(file.contents)) {
+		if (!file.extract || !isTar(file.contents)) {
 			cb(null, file);
 			return;
 		}

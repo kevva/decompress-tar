@@ -33,9 +33,11 @@ You can also use this plugin with [gulp](http://gulpjs.com):
 ```js
 var gulp = require('gulp');
 var tar = require('decompress-tar');
+var vinylAssign = require('vinyl-assign');
 
 gulp.task('default', function () {
 	return gulp.src('foo.tar')
+		.pipe(vinylAssign({extract: true}))
 		.pipe(tar({strip: 1}))
 		.pipe(gulp.dest('dest'));
 });
