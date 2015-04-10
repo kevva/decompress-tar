@@ -14,29 +14,26 @@ $ npm install --save decompress-tar
 
 ```js
 var Decompress = require('decompress');
-var tar = require('decompress-tar');
+var decompressTar = require('decompress-tar');
 
-var decompress = new Decompress()
+new Decompress()
 	.src('foo.tar')
 	.dest('dest')
-	.use(tar({strip: 1}));
-
-decompress.run(function (err, files) {
-	console.log('Files extracted successfully!'); 
-});
+	.use(decompressTar({strip: 1}))
+	.run();
 ```
 
 You can also use this plugin with [gulp](http://gulpjs.com):
 
 ```js
+var decompressTar = require('decompress-tar');
 var gulp = require('gulp');
-var tar = require('decompress-tar');
 var vinylAssign = require('vinyl-assign');
 
 gulp.task('default', function () {
 	return gulp.src('foo.tar')
 		.pipe(vinylAssign({extract: true}))
-		.pipe(tar({strip: 1}))
+		.pipe(decompressTar({strip: 1}))
 		.pipe(gulp.dest('dest'));
 });
 ```
@@ -44,7 +41,7 @@ gulp.task('default', function () {
 
 ## API
 
-### tar(options)
+### decompressTar(options)
 
 #### options.strip
 

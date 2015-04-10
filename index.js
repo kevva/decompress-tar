@@ -1,19 +1,19 @@
 'use strict';
 
-var File = require('vinyl');
 var fs = require('fs');
 var isTar = require('is-tar');
 var objectAssign = require('object-assign');
 var stripDirs = require('strip-dirs');
-var tar = require('tar-stream');
+var tarStream = require('tar-stream');
 var through = require('through2');
+var Vinyl = require('vinyl');
 
 module.exports = function (opts) {
 	opts = opts || {};
 	opts.strip = +opts.strip || 0;
 
 	return through.obj(function (file, enc, cb) {
-		var extract = tar.extract();
+		var extract = tarStream.extract();
 		var self = this;
 
 		if (file.isNull()) {
@@ -42,7 +42,7 @@ module.exports = function (opts) {
 
 			stream.on('end', function () {
 				if (header.type !== 'directory') {
-					self.push(new File({
+					self.push(new Vinyl({
 						contents: Buffer.concat(chunk, len),
 						path: stripDirs(header.name, opts.strip),
 						stat: objectAssign(new fs.Stats(), header)
