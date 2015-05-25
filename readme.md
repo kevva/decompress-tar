@@ -13,29 +13,16 @@ $ npm install --save decompress-tar
 ## Usage
 
 ```js
-var Decompress = require('decompress');
+var fs = require('fs');
 var decompressTar = require('decompress-tar');
+var extract = decompressTar();
 
-new Decompress()
-	.src('foo.tar')
-	.dest('dest')
-	.use(decompressTar({strip: 1}))
-	.run();
-```
-
-You can also use this plugin with [gulp](http://gulpjs.com):
-
-```js
-var decompressTar = require('decompress-tar');
-var gulp = require('gulp');
-var vinylAssign = require('vinyl-assign');
-
-gulp.task('default', function () {
-	return gulp.src('foo.tar')
-		.pipe(vinylAssign({extract: true}))
-		.pipe(decompressTar({strip: 1}))
-		.pipe(gulp.dest('dest'));
+extract.on('entry', function (header, stream, cb) {
+	stream.on('end', cb);
+	stream.resume();
 });
+
+fs.createReadStream('unicorn.tar').pipe(extract);
 ```
 
 

@@ -22,20 +22,15 @@
     "decompress",
     "decompressplugin",
     "extract",
-    "gulpplugin",
     "tar"
   ],
   "dependencies": {
+    "if-stream": "^1.0.3",
     "is-tar": "^1.0.0",
-    "object-assign": "^2.0.0",
-    "strip-dirs": "^1.0.0",
-    "tar-stream": "^1.1.1",
-    "through2": "^0.6.1",
-    "vinyl": "^0.4.3"
+    "strip-dirs": "^1.1.1",
+    "tar-stream": "^1.1.5"
   },
   "devDependencies": {
-    "ava": "^0.0.4",
-    "is-jpg": "^1.0.0",
-    "vinyl-file": "^1.1.0"
+    "ava": "^0.0.4"
   }
 }
