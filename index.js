@@ -42,11 +42,17 @@ module.exports = function (opts) {
 
 			stream.on('end', function () {
 				if (header.type !== 'directory') {
-					self.push(new Vinyl({
+					var file = new Vinyl({
 						contents: Buffer.concat(chunk, len),
 						path: stripDirs(header.name, opts.strip),
 						stat: objectAssign(new fs.Stats(), header)
-					}));
+					});
+
+					if (header.type === 'symlink') {
+						file.symlink = header.linkname
+					}
+
+					self.push(file);
 				}
 
 				done();
