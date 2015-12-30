@@ -38,3 +38,30 @@ test('strip path level using the `strip` option', function (t) {
 
 	stream.end(file);
 });
+
+test('decompress a TAR file with a symlink', function (t) {
+	t.plan(5);
+
+	var file = vinylFile.readSync(path.join(__dirname, 'fixtures/test-symlink.tar'));
+	var stream = decompressTar();
+
+	file.extract = true;
+
+	stream.on('data', function (file) {
+		switch(file.path)
+		{
+			case 'test-symlink/file.txt':
+				t.assert(!file.stat.isDirectory());
+				t.assert(file.symlink === undefined, file.symlink);
+				t.assert(file.contents.length === 6, file.contents.length);
+			break;
+
+			case 'test-symlink/symlink':
+				t.assert(file.symlink === 'file.txt', file.symlink);
+				t.assert(file.contents.length === 0, file.contents.length);
+			break;
+		}
+	});
+
+	stream.end(file);
+});
