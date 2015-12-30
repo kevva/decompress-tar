@@ -25,7 +25,7 @@ test('decompress a TAR file', function (t) {
 test('strip path level using the `strip` option', function (t) {
 	t.plan(3);
 
-	var file = vinylFile.readSync(path.join(__dirname, 'fixtures/test.tar'));
+	var file = vinylFile.readSync(path.join(__dirname, 'fixtures/test-nested.tar'));
 	var stream = decompressTar({strip: 1});
 
 	file.extract = true;
