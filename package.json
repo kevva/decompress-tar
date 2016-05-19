@@ -13,7 +13,7 @@
     "node": ">=4"
   },
   "scripts": {
-    "test": "ava"
+    "test": "xo && ava"
   },
   "files": [
     "index.js"
@@ -31,6 +31,10 @@
   "devDependencies": {
     "ava": "*",
     "is-jpg": "^1.0.0",
-    "pify": "^2.3.0"
+    "pify": "^2.3.0",
+    "xo": "*"
+  },
+  "xo": {
+    "esnext": true
   }
 }
