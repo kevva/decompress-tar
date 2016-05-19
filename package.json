@@ -25,7 +25,7 @@
     "tar"
   ],
   "dependencies": {
-    "is-tar": "^1.0.0",
+    "file-type": "^3.8.0",
     "tar-stream": "^1.5.2"
   },
   "devDependencies": {

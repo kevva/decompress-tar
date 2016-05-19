@@ -1,14 +1,14 @@
 'use strict';
-const isTar = require('is-tar');
+const fileType = require('file-type');
 const tarStream = require('tar-stream');
 
 module.exports = () => buf => {
 	if (!Buffer.isBuffer(buf)) {
-		return Promise.reject(new TypeError('Expected a buffer'));
+		return Promise.reject(new TypeError(`Expected a Buffer, got ${typeof buf}`));
 	}
 
-	if (!isTar(buf)) {
-		return Promise.resolve(buf);
+	if (!fileType(buf) || fileType(buf).ext !== 'tar') {
+		return Promise.resolve([]);
 	}
 
 	const extract = tarStream.extract();
@@ -19,11 +19,18 @@ module.exports = () => buf => {
 
 		stream.on('data', data => chunk.push(data));
 		stream.on('end', () => {
-			files.push({
+			const file = {
 				data: Buffer.concat(chunk),
-				path: header.name
-			});
+				mode: header.mode,
+				path: header.name,
+				type: header.type
+			};
 
+			if (header.type === 'symlink' || header.type === 'link') {
+				file.linkname = header.linkname;
+			}
+
+			files.push(file);
 			cb();
 		});
 	});
