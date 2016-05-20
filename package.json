@@ -10,10 +10,10 @@
     "url": "https://github.com/kevva"
   },
   "engines": {
-    "node": ">=0.10.0"
+    "node": ">=4"
   },
   "scripts": {
-    "test": "node test/test.js"
+    "test": "xo && ava"
   },
   "files": [
     "index.js"
@@ -22,20 +22,19 @@
     "decompress",
     "decompressplugin",
     "extract",
-    "gulpplugin",
     "tar"
   ],
   "dependencies": {
-    "is-tar": "^1.0.0",
-    "object-assign": "^2.0.0",
-    "strip-dirs": "^1.0.0",
-    "tar-stream": "^1.1.1",
-    "through2": "^0.6.1",
-    "vinyl": "^0.4.3"
+    "file-type": "^3.8.0",
+    "tar-stream": "^1.5.2"
   },
   "devDependencies": {
-    "ava": "^0.0.4",
+    "ava": "*",
     "is-jpg": "^1.0.0",
-    "vinyl-file": "^1.1.0"
+    "pify": "^2.3.0",
+    "xo": "*"
+  },
+  "xo": {
+    "esnext": true
   }
 }
