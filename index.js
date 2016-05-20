@@ -22,6 +22,7 @@ module.exports = () => buf => {
 			const file = {
 				data: Buffer.concat(chunk),
 				mode: header.mode,
+				mtime: header.mtime,
 				path: header.name,
 				type: header.type
 			};
