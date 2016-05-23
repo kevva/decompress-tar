@@ -1,13 +1,14 @@
 'use strict';
 const fileType = require('file-type');
+const isStream = require('is-stream');
 const tarStream = require('tar-stream');
 
-module.exports = () => buf => {
-	if (!Buffer.isBuffer(buf)) {
-		return Promise.reject(new TypeError(`Expected a Buffer, got ${typeof buf}`));
+module.exports = () => input => {
+	if (!Buffer.isBuffer(input) && !isStream(input)) {
+		return Promise.reject(new TypeError(`Expected a Buffer or Stream, got ${typeof input}`));
 	}
 
-	if (!fileType(buf) || fileType(buf).ext !== 'tar') {
+	if (Buffer.isBuffer(input) && (!fileType(input) || fileType(input).ext !== 'tar')) {
 		return Promise.resolve([]);
 	}
 
@@ -36,10 +37,19 @@ module.exports = () => buf => {
 		});
 	});
 
-	extract.end(buf);
-
-	return new Promise((resolve, reject) => {
+	const promise = new Promise((resolve, reject) => {
 		extract.on('finish', () => resolve(files));
 		extract.on('error', reject);
 	});
+
+	extract.then = promise.then.bind(promise);
+	extract.catch = promise.catch.bind(promise);
+
+	if (Buffer.isBuffer(input)) {
+		extract.end(input);
+	} else {
+		input.pipe(extract);
+	}
+
+	return extract;
 };
