@@ -17,21 +17,23 @@ module.exports = () => input => {
 
 	extract.on('entry', (header, stream, cb) => {
 		const chunk = [];
+		const file = {
+			stream,
+			mode: header.mode,
+			mtime: header.mtime,
+			path: header.name,
+			type: header.type
+		};
+
+		if (header.type === 'symlink' || header.type === 'link') {
+			file.linkname = header.linkname;
+		}
+
+		extract.emit('file', file);
 
 		stream.on('data', data => chunk.push(data));
 		stream.on('end', () => {
-			const file = {
-				data: Buffer.concat(chunk),
-				mode: header.mode,
-				mtime: header.mtime,
-				path: header.name,
-				type: header.type
-			};
-
-			if (header.type === 'symlink' || header.type === 'link') {
-				file.linkname = header.linkname;
-			}
-
+			file.data = Buffer.concat(chunk);
 			files.push(file);
 			cb();
 		});
