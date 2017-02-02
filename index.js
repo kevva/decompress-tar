@@ -3,13 +3,19 @@ const fileType = require('file-type');
 const isStream = require('is-stream');
 const tarStream = require('tar-stream');
 
-module.exports = () => input => {
+module.exports = () => (input, opts) => {
+	opts = Object.assign({
+		legacyTar: false
+	}, opts);
+
 	if (!Buffer.isBuffer(input) && !isStream(input)) {
 		return Promise.reject(new TypeError(`Expected a Buffer or Stream, got ${typeof input}`));
 	}
 
-	if (Buffer.isBuffer(input) && (!fileType(input) || fileType(input).ext !== 'tar')) {
-		return Promise.resolve([]);
+	if (Buffer.isBuffer(input)) {
+		if ((!fileType(input) && !opts.legacyTar) || (fileType(input) && fileType(input).ext !== 'tar')) {
+			return Promise.resolve([]);
+		}
 	}
 
 	const extract = tarStream.extract();

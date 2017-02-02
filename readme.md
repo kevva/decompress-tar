@@ -28,7 +28,7 @@ decompress('unicorn.tar', 'dist', {
 
 ## API
 
-### decompressTar()(input)
+### decompressTar()(input, [options])
 
 Returns both a Promise for a Buffer and a [Duplex stream](https://nodejs.org/api/stream.html#stream_class_stream_duplex).
 
@@ -37,6 +37,15 @@ Returns both a Promise for a Buffer and a [Duplex stream](https://nodejs.org/api
 Type: `Buffer` `Stream`
 
 Buffer or stream to decompress.
+
+#### options
+
+##### legacyTar
+
+Type: `boolean`<br>
+Default: `false`
+
+Prevent file check for [pre-POSIX.1-1988 (i.e. v7)](https://en.wikipedia.org/wiki/Tar_(computing)#File_format) tar files where there is no magic number for recognition. Should use if is generated from old Linux releases.
 
 
 ## License
