@@ -4,52 +4,57 @@ const isStream = require('is-stream');
 const tarStream = require('tar-stream');
 
 module.exports = () => (input, opts) => {
-    if (!Buffer.isBuffer(input) && !isStream(input)) {
-        return Promise.reject(new TypeError(`Expected a Buffer or Stream, got ${typeof input}`));
-    }
+	
+	opts = Object.assign({
+		legacyTar: false
+	}, opts);
 
-    if (Buffer.isBuffer(input) && (!fileType(input) && !opts.legacyTar || fileType(input) && fileType(input).ext !== 'tar')) {
-        return Promise.resolve([]);
-    }
+	if (!Buffer.isBuffer(input) && !isStream(input)) {
+		return Promise.reject(new TypeError(`Expected a Buffer or Stream, got ${typeof input}`));
+	}
 
-    const extract = tarStream.extract();
-    const files = [];
+	if (Buffer.isBuffer(input) && (!fileType(input) && !opts.legacyTar || fileType(input) && fileType(input).ext !== 'tar')) {
+		return Promise.resolve([]);
+	}
 
-    extract.on('entry', (header, stream, cb) => {
-        const chunk = [];
+	const extract = tarStream.extract();
+	const files = [];
 
-        stream.on('data', data => chunk.push(data));
-        stream.on('end', () => {
-            const file = {
-                data: Buffer.concat(chunk),
-                mode: header.mode,
-                mtime: header.mtime,
-                path: header.name,
-                type: header.type
-            };
+	extract.on('entry', (header, stream, cb) => {
+		const chunk = [];
 
-            if (header.type === 'symlink' || header.type === 'link') {
-                file.linkname = header.linkname;
-            }
+		stream.on('data', data => chunk.push(data));
+		stream.on('end', () => {
+			const file = {
+				data: Buffer.concat(chunk),
+				mode: header.mode,
+				mtime: header.mtime,
+				path: header.name,
+				type: header.type
+			};
 
-            files.push(file);
-            cb();
-        });
-    });
+			if (header.type === 'symlink' || header.type === 'link') {
+				file.linkname = header.linkname;
+			}
 
-    const promise = new Promise((resolve, reject) => {
-        extract.on('finish', () => resolve(files));
-        extract.on('error', reject);
-    });
+			files.push(file);
+			cb();
+		});
+	});
 
-    extract.then = promise.then.bind(promise);
-    extract.catch = promise.catch.bind(promise);
+	const promise = new Promise((resolve, reject) => {
+		extract.on('finish', () => resolve(files));
+		extract.on('error', reject);
+	});
 
-    if (Buffer.isBuffer(input)) {
-        extract.end(input);
-    } else {
-        input.pipe(extract);
-    }
+	extract.then = promise.then.bind(promise);
+	extract.catch = promise.catch.bind(promise);
 
-    return extract;
+	if (Buffer.isBuffer(input)) {
+		extract.end(input);
+	} else {
+		input.pipe(extract);
+	}
+
+	return extract;
 };
