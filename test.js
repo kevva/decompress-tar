@@ -3,7 +3,7 @@ import path from 'path';
 import isJpg from 'is-jpg';
 import pify from 'pify';
 import test from 'ava';
-import m from './';
+import m from '.';
 
 const fsP = pify(fs);
 
@@ -42,5 +42,5 @@ test('return empty array if non-valid file is supplied', async t => {
 });
 
 test('throw on wrong input', async t => {
-	t.throws(m()('foo'), 'Expected a Buffer or Stream, got string');
+	await t.throws(m()('foo'), 'Expected a Buffer or Stream, got string');
 });

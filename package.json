@@ -25,17 +25,14 @@
     "tar"
   ],
   "dependencies": {
-    "file-type": "^3.8.0",
+    "file-type": "^4.3.0",
     "is-stream": "^1.1.0",
     "tar-stream": "^1.5.2"
   },
   "devDependencies": {
     "ava": "*",
     "is-jpg": "^1.0.0",
-    "pify": "^2.3.0",
+    "pify": "^3.0.0",
     "xo": "*"
-  },
-  "xo": {
-    "esnext": true
   }
 }
