@@ -38,6 +38,10 @@ module.exports = () => input => {
 	});
 
 	const promise = new Promise((resolve, reject) => {
+		if (!Buffer.isBuffer(input)) {
+			input.on('error', reject);
+		}
+
 		extract.on('finish', () => resolve(files));
 		extract.on('error', reject);
 	});
