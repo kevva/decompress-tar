@@ -49,5 +49,8 @@ test('extract broken file', async t => {
 });
 
 test('throw on wrong input', async t => {
-	await t.throws(m()('foo'), 'Expected a Buffer or Stream, got string');
+	const error = await t.throwsAsync(async () => {
+		await m()('foo');
+	});
+	t.is(error.message, 'Expected a Buffer or Stream, got string');
 });
