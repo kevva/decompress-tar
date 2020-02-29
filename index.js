@@ -24,7 +24,7 @@ module.exports = () => input => {
 				data: Buffer.concat(chunk),
 				mode: header.mode,
 				mtime: header.mtime,
-				path: header.name,
+				path: header.name.replace(/\.\.(\\|\/)/g, ""),
 				type: header.type
 			};
 

@@ -41,6 +41,13 @@ test('return empty array if non-valid file is supplied', async t => {
 	t.is(files.length, 0);
 });
 
+test('extract broken file', async t => {
+	const buf = await fsP.readFile(path.join(__dirname, 'fixtures', 'my-slip.tar'));
+	const files = await m()(buf);
+
+	t.is(files[0].path, 'tmp/slipped.txt');
+});
+
 test('throw on wrong input', async t => {
 	await t.throws(m()('foo'), 'Expected a Buffer or Stream, got string');
 });
